@@ -1,13 +1,16 @@
-name: Java CI
+name: Java CI/CD
 
 on:
   push:
     branches: [ "master" ]
-  pull_request:
 
 jobs:
-  build-test:
+  build-and-push-image:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout code
@@ -20,14 +23,14 @@ jobs:
           java-version: "17"
           cache: "maven"
 
-      - name: Run tests
-        run: mvn -B test
+      - name: Build JAR
+        run: mvn -B clean package
 
-      - name: Package JAR
-        run: mvn -B package
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-jar
-          path: target/*.jar
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ github.repository }}:latest .
+
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.repository }}:latest
