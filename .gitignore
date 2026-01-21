@@ -1,0 +1,13 @@
+# Maven build output (uvek se ponovo pravi)
+target/
+
+# IDE fajlovi
+.idea/
+*.iml
+.vscode/
+
+# OS junk
+.DS_Store
+
+# logovi
+*.log
