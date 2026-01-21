@@ -2,6 +2,6 @@ package com.example;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello from CD Docker image!");
+        System.out.println("Hello from feature branch!");
     }
 }
